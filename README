@@ -1,3 +1,8 @@
+xlsx2csv-select
+
+Added functionality to export only select rows based on highlighting.
+
+Forked from:
 
 xlsx to csv converter (http://github.com/dilshod/xlsx2csv)
 

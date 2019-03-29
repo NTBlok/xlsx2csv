@@ -11,8 +11,8 @@ scripts = ["scripts/xlsx2csv"]
 
 name = "xlsx2csv"
 version = "0.7.4"
-author = "Dilshod Temirkhdojaev"
-author_email = "tdilshod@gmail.com"
+author = "Dilshod Temirkhdojaev, N.T. Blok"
+author_email = "tdilshod@gmail.com, ntedeschiblok@gmail.com"
 desc = "xlsx to csv converter"
 long_desc = "xlsx to csv converter"
 url = "http://github.com/dilshod/xlsx2csv"

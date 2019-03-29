@@ -19,7 +19,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-__author__ = "Dilshod Temirkhodjaev <tdilshod@gmail.com>"
+__author__ = "Dilshod Temirkhodjaev <tdilshod@gmail.com>, N.T. Blok <ntedeschiblok@gmail.com>"
 __license__ = "GPL-2+"
 __version__ = "0.7.4"
 
@@ -416,11 +416,13 @@ class Relationships:
                     "target" : target and target.value.encode("utf-8") or None
                 }
 
+
 class Styles:
     def __init__(self):
         self.numFmts = {}
         self.cellXfs = []
         self.cellXfs_fill = []
+        self.fills = {}
 
     def firstchild(self, filehandle):
         return minidom.parseString(filehandle.read()).firstChild
@@ -441,8 +443,17 @@ class Styles:
 
         if styles.namespaceURI:
             cellXfsElement = styles.getElementsByTagNameNS(styles.namespaceURI, "cellXfs")
+            fillsElement = styles.getElementsByTagNameNS(styles.namespaceURI, "fills")
         else:
             cellXfsElement = styles.getElementsByTagName("cellXfs")
+            fillsElement = styles.getElementsByTagName("fills")
+        if len(fillsElement) == 1:
+            for idx, fill in enumerate(fillsElement[0].childNodes):
+                fgcolor = fill.getElementsByTagName("patternFill")[0].getElementsByTagName("fgColor")
+                if fgcolor.length == 1 and 'rgb' in fgcolor[0]._attrs:
+                    rgb = fgcolor[0]._attrs['rgb'].value
+                    self.fills[idx] = rgb
+
         if len(cellXfsElement) == 1:
             for cellXfs in cellXfsElement[0].childNodes:
                 if cellXfs.nodeType != minidom.Node.ELEMENT_NODE or not (cellXfs.nodeName == "xf" or cellXfs.nodeName.endswith(":xf")):
@@ -458,7 +469,8 @@ class Styles:
                 if cellXfs._attrs and 'fillId' in cellXfs._attrs:
                     fillId = int(cellXfs._attrs['fillId'].value)
                     # fillId = 1 is not a custom color fill
-                    if fillId > 1:
+                    if fillId in self.fills:
+                        #print("Fill: {}".format(fillId))
                         containsfill = int(cellXfs._attrs['fillId'].value)
                     else:
                         containsfill = 0
